@@ -1,4 +1,6 @@
-# enduro.js
+# enduro.js 2
+
+https://github.com/Gottwik/Enduro is cool but at some point I felt it grew too quickly and has a bit too many dependencies that are not relevant for all the projects. enduro2 is more or less exact clone, but will focus on decoupling dependencies into separate modules which users will be able to include if they are needed.
 
 [![Join the chat at https://gitter.im/Enduro-js/Lobby](https://badges.gitter.im/Enduro-js/Lobby.svg)](https://gitter.im/Enduro-js/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![npm version](https://badge.fury.io/js/enduro.svg)](https://badge.fury.io/js/enduro)
