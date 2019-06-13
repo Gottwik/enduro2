@@ -10,16 +10,16 @@ module.exports = {
 		const chalk = require('chalk')
 
 		if (!cli_arguments._.length) {
-			logger.init('enduro.js')
-			logger.centerlog('Welcome to enduro.js :-)', true)
+			logger.init('enduro2')
+			logger.centerlog('Welcome to enduro2 :-)', true)
 
-			logger.log('Want to create a new enduro.js project from a theme?')
+			logger.log('Want to create a new enduro2 project from a theme?')
 			logger.tablog('run ' + chalk.green('$ enduro theme'), true)
 
-			logger.log('Want to create a new, empty enduro.js project?')
+			logger.log('Want to create a new, empty enduro project?')
 			logger.tablog('run ' + chalk.green('$ enduro create'), true)
 
-			logger.log('Do you already have a enduro.js project?')
+			logger.log('Do you already have a enduro project?')
 			logger.tablog('run ' + chalk.green('$ enduro dev') + ' to start developing it', true)
 
 			logger.log('Project finished?')

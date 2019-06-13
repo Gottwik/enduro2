@@ -1,3 +1,7 @@
+/** ———————————————————————————————————————————————————————— */
+/**    run this by:
+/**			mocha --recursive --bail --grep "admin api"
+/** ———————————————————————————————————————————————————————— */
 const expect = require('chai').expect
 const request = require('request')
 

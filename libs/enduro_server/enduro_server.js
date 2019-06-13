@@ -21,7 +21,6 @@ const admin_api = require(enduro.enduro_path + '/libs/admin_api')
 const website_app = require(enduro.enduro_path + '/libs/website_app')
 const trollhunter = require(enduro.enduro_path + '/libs/trollhunter')
 const logger = require(enduro.enduro_path + '/libs/logger')
-const ab_tester = require(enduro.enduro_path + '/libs/ab_testing/ab_tester')
 const brick_handler = require(enduro.enduro_path + '/libs/bricks/brick_handler')
 
 // initialization of the sessions
@@ -114,21 +113,8 @@ enduro_server.prototype.run = function (server_setup) {
 
 				trollhunter.login(req)
 					.then(() => {
-
 						let requested_url = req.url
-
-						let a = requested_url.split('/').filter(x => x.length)
-						// serves index.html when empty or culture-only url is provided
-						if (requested_url.length <= 1 ||
-							(requested_url.split('/')[1] && enduro.config.cultures.indexOf(requested_url.split('/')[1]) + 1 && requested_url.split('/').length <= 2) ||
-							a[a.length - 1].indexOf('.') === -1
-						) {
-							requested_url += requested_url.slice(-1) === '/' ? 'index' : '/index'
-						}
-
-						// applies ab testing
-						return ab_tester.get_ab_tested_filepath(requested_url, req, res)
-
+						return requested_url
 					}, () => {
 						throw new Error('user not logged in')
 					})

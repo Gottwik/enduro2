@@ -15,7 +15,6 @@ const enduro_render = require(enduro.enduro_path + '/libs/enduro_render')
 const gulp_tasks = require(enduro.enduro_path + '/libs/build_tools/gulp_tasks')
 const pregenerator = require(enduro.enduro_path + '/libs/pregenerator/pregenerator')
 const abstractor = require(enduro.enduro_path + '/libs/abstractor/abstractor')
-const ab_tester = require(enduro.enduro_path + '/libs/ab_testing/ab_tester')
 const markdownifier = require(enduro.enduro_path + '/libs/markdown/markdownifier')
 const event_hooks = require(enduro.enduro_path + '/libs/external_links/event_hooks')
 const brick_handler = require(enduro.enduro_path + '/libs/bricks/brick_handler')
@@ -48,9 +47,6 @@ action.prototype.action = function (dont_do_juice_pull) {
 		})
 		.then(() => {
 			return markdownifier.precompute()
-		})
-		.then(() => {
-			return ab_tester.generate_global_ab_list()
 		})
 		.then(() => {
 			return pregenerator.pregenerate()
