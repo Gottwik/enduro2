@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "async": "^2.6.0",
-    "autoprefixer-stylus": "^0.14.0",
     "babel-core": "^6.26.0",
     "base64id": "^1.0.0",
     "bluebird": "^3.5.1",
@@ -60,7 +59,6 @@
     "gulp-sass": "^3.1.2",
     "gulp-sass-bulk-import": "^1.0.1",
     "gulp-sourcemaps": "^2.6.3",
-    "gulp-stylus": "^2.7.0",
     "gulp-uglify": "^1.5.4",
     "gulp-watch": "^4.3.5",
     "gulp-wrap": "^0.13.0",

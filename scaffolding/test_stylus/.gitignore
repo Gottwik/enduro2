@@ -1,6 +1,0 @@
-/_generated/*
-/assets/vendor
-/node_modules
-**/_*
-enduro_secret.json
-/juicebox
