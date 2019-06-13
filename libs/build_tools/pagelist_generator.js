@@ -21,37 +21,19 @@ const flat_helpers = require(enduro.enduro_path + '/libs/flat_db/flat_helpers')
 const format_service = require(enduro.enduro_path + '/libs/services/format_service')
 
 // * ———————————————————————————————————————————————————————— * //
-// * 	init
-// *
-// * 	registers generating and saving the pagelist to gulp
-// *	additionaly it will expand the global data with the pagelist
-// *	@param {object} gulp - gulp to register the task into
-// *	@return {} - will call an empty callback
+// * 	todo
 // * ———————————————————————————————————————————————————————— * //
-pagelist_generator.prototype.init = function (gulp) {
+pagelist_generator.prototype.do = function (gulp) {
 	const self = this
 
-	const pagelist_generator_task_name = 'pagelist_generator'
+	return self.generate_cms_list()
+		.then((cmslist) => {
 
-	// adds task to gulp
-	gulp.task(pagelist_generator_task_name, function (cb) {
+			// Extends global data with currently loaded data
+			extend(true, enduro.cms_data.global, {cmslist: cmslist})
 
-		// generates cmslist
-		self.generate_cms_list()
-			.then((cmslist) => {
-
-				// Extends global data with currently loaded data
-				extend(true, enduro.cms_data.global, {cmslist: cmslist})
-
-				return self.save_cms_list(cmslist)
-			})
-			.then(() => {
-				cb()
-			})
-	})
-
-	// returns name of the task so it can be stored and called comfortably
-	return pagelist_generator_task_name
+			return self.save_cms_list(cmslist)
+		})
 }
 
 // * ———————————————————————————————————————————————————————— * //

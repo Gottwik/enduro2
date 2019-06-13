@@ -4,17 +4,10 @@
 // * ———————————————————————————————————————————————————————— * //
 const css_handler = function () {}
 
-css_handler.prototype.init = function (gulp, browser_sync) {
+const sass_handler = require(enduro.enduro_path + '/libs/build_tools/sass_handler')
 
-	// stores task name
-	const css_handler_task_name = 'css'
-	const sass_handler = require(enduro.enduro_path + '/libs/build_tools/sass_handler').init(gulp, browser_sync)
-
-	gulp.task(css_handler_task_name, function() {
-		gulp.start(sass_handler)
-	})
-
-	return css_handler_task_name;
+css_handler.prototype.do = function (browser_sync) {
+	return sass_handler.do(browser_sync)
 }
 
 module.exports = new css_handler()

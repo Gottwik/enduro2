@@ -15,7 +15,6 @@ const flatten = require('gulp-flatten')
 const concat = require('gulp-concat')
 const filterBy = require('gulp-filter-by')
 const wrap = require('gulp-wrap')
-const path = require('path')
 
 // * enduro dependencies
 const flat_helpers = require(enduro.enduro_path + '/libs/flat_db/flat_helpers')
@@ -23,13 +22,14 @@ const logger = require(enduro.enduro_path + '/libs/logger')
 const event_hooks = require(enduro.enduro_path + '/libs/external_links/event_hooks')
 
 // Gulp tasks
-const pagelist_generator = require(enduro.enduro_path + '/libs/build_tools/pagelist_generator').init(gulp)
-const assets_copier = require(enduro.enduro_path + '/libs/build_tools/assets_copier').init(gulp, browser_sync)
-const assets_copier_watch = require(enduro.enduro_path + '/libs/build_tools/assets_copier').watch(gulp, browser_sync)
-const js_handler = require(enduro.enduro_path + '/libs/build_tools/js_handler').init(gulp, browser_sync)
-const css_handler = require(enduro.enduro_path + '/libs/build_tools/css_handler').init(gulp, browser_sync)
+const pagelist_generator = require(enduro.enduro_path + '/libs/build_tools/pagelist_generator')
+const assets_copier = require(enduro.enduro_path + '/libs/build_tools/assets_copier')
+const js_handler = require(enduro.enduro_path + '/libs/build_tools/js_handler')
+const css_handler = require(enduro.enduro_path + '/libs/build_tools/css_handler')
 
-gulp.enduro_refresh = function (callback) {
+const gulp_tasks = function () {}
+
+gulp_tasks.prototype.enduro_refresh = function (callback) {
 	logger.log('Refresh', true, 'enduro_render_events')
 	return enduro.actions.render(true)
 }
@@ -37,17 +37,18 @@ gulp.enduro_refresh = function (callback) {
 // * ———————————————————————————————————————————————————————— * //
 // * 	browser sync task
 // * ———————————————————————————————————————————————————————— * //
-gulp.task('browser_sync', function () {
-	browsersync_start(false)
-})
+gulp_tasks.prototype.browser_sync = function () {
+	return browsersync_start(false)
+}
 
-gulp.task('browser_sync_norefresh', function () {
-	browsersync_start(true)
-})
+gulp_tasks.prototype.browser_sync_norefresh = function () {
+	return browsersync_start(true)
+}
 
-gulp.task('browser_sync_stop', [], function () {
-	return browser_sync.exit()
-})
+gulp_tasks.prototype.browser_sync_stop = function () {
+	browser_sync.exit()
+	return new Promise.resolve()
+}
 
 function browsersync_start (norefresh) {
 	logger.timestamp('browsersync started', 'enduro_events')
@@ -105,7 +106,9 @@ function browsersync_start (norefresh) {
 	if (!enduro.flags.nowatch) {
 
 		// Watch for any js changes
-		watch([enduro.project_path + '/assets/js/**/*.js'], () => { gulp.start(js_handler) })
+		watch([enduro.project_path + '/assets/js/**/*.js'], () => { 
+			js_handler.do()
+		})
 
 		// Watch for sass changes
 		watch(
@@ -113,9 +116,10 @@ function browsersync_start (norefresh) {
 				enduro.project_path + '/assets/css/**/*',
 			],
 			() => {
-				gulp.start(css_handler, () => {
-					event_hooks.execute_hook('post_update')
-				})
+				return css_handler.do(css_handler)
+					.then(() => {
+						event_hooks.execute_hook('post_update')
+					})
 			})
 
 		// Watch for local handlebars helpers
@@ -149,8 +153,8 @@ function browsersync_start (norefresh) {
 // * ———————————————————————————————————————————————————————— * //
 // * 	JS Handlebars - Not enduro, page-generation related
 // * ———————————————————————————————————————————————————————— * //
-gulp.task('hbs_templates', function () {
-	gulp.src(enduro.project_path + '/components/**/*.hbs')
+gulp_tasks.prototype.hbs_templates = function () {
+	return gulp.src(enduro.project_path + '/components/**/*.hbs')
 		.pipe(handlebars({
 			// Pass local handlebars
 			handlebars: enduro.templating_engine,
@@ -158,12 +162,12 @@ gulp.task('hbs_templates', function () {
 		.pipe(defineModule('amd'))
 		.pipe(flatten())
 		.pipe(gulp.dest(enduro.project_path + '/' + enduro.config.build_folder + '/assets/hbs_templates'))
-})
+}
 
 // * ———————————————————————————————————————————————————————— * //
 // * 	Handlebars helpers
 // * ———————————————————————————————————————————————————————— * //
-gulp.task('hbs_helpers', function () {
+gulp_tasks.prototype.hbs_helpers = function () {
 	return gulp.src([enduro.project_path + '/assets/hbs_helpers/**/*.js', enduro.enduro_path + '/hbs_helpers/**/*.js'])
 		.pipe(filterBy(function (file) {
 			return file.contents.toString().indexOf('enduro_nojs') == -1
@@ -171,34 +175,37 @@ gulp.task('hbs_helpers', function () {
 		.pipe(concat('hbs_helpers.js'))
 		.pipe(wrap('define([],function() { return function(enduro.templating_engine) { \n\n<%= contents %>\n\n }})'))
 		.pipe(gulp.dest(enduro.project_path + '/' + enduro.config.build_folder + '/assets/hbs_helpers/'))
-})
+}
 
 // * ———————————————————————————————————————————————————————— * //
 // * 	Preproduction Task
 // *	Tasks that need to be done before doing the enduro render
 // * ———————————————————————————————————————————————————————— * //
-gulp.task('preproduction', [pagelist_generator])
+gulp_tasks.prototype.preproduction = function () {
+	return pagelist_generator.do()
+}
 
 // * ———————————————————————————————————————————————————————— * //
 // * 	Production Task
 // *	No browser_sync, no watching for anything
 // * ———————————————————————————————————————————————————————— * //
-gulp.task('production', [js_handler, css_handler, 'hbs_templates', assets_copier, 'hbs_helpers'])
+gulp_tasks.prototype.production = function () {
+	const self = this
+	return Promise.all([js_handler.do(), css_handler.do(browser_sync), self.hbs_templates(), assets_copier.do(), self.hbs_helpers()])
+}
 
 // * ———————————————————————————————————————————————————————— * //
 // * 	Default Task
 // * ———————————————————————————————————————————————————————— * //
-// gulp.task('default', ['hbs_templates', 'sass', 'js', 'img', 'vendor', 'fonts', 'hbs_helpers', 'browser_sync'])
-gulp.task('default', [assets_copier_watch, 'browser_sync'])
-gulp.task('default_norefresh', [assets_copier_watch, 'browser_sync_norefresh'])
+gulp_tasks.prototype.default = function () {
+	const self = this
+	return Promise.all([assets_copier.watch(browser_sync), self.browser_sync()])
+}
 
-gulp.start_promised = function (task_name) {
-	return new Promise(function (resolve, reject) {
-		gulp.start(task_name, () => {
-			resolve()
-		})
-	})
+gulp_tasks.prototype.default_norefresh = function () {
+	const self = this
+	return Promise.all([assets_copier.watch(browser_sync), self.browser_sync_norefresh()])
 }
 
 // Export gulp to enable access for enduro
-module.exports = gulp
+module.exports = new gulp_tasks()

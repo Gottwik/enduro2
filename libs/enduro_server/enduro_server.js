@@ -114,12 +114,24 @@ enduro_server.prototype.run = function (server_setup) {
 				trollhunter.login(req)
 					.then(() => {
 						let requested_url = req.url
+						let a = requested_url.split('/').filter(x => x.length)
+		
+						// serves index.html when empty or culture-only url is provided
+						if (requested_url.length <= 1 ||
+							(requested_url.split('/')[1] && enduro.config.cultures.indexOf(requested_url.split('/')[1]) + 1 && requested_url.split('/').length <= 2) ||
+							a[a.length - 1].indexOf('.') === -1
+						) {
+							requested_url += requested_url.slice(-1) === '/' ? 'index' : '/index'
+						}
+
+						// applies ab testing
 						return requested_url
 					}, () => {
 						throw new Error('user not logged in')
 					})
 					.then((requested_url) => {
 						// serves the requested file
+						console.log(enduro.project_path + '/' + enduro.config.build_folder + requested_url + '.html')
 						res.sendFile(enduro.project_path + '/' + enduro.config.build_folder + requested_url + '.html')
 					}, () => {
 						res.sendFile(enduro.config.admin_folder + '/enduro_login/index.html')

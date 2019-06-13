@@ -52,21 +52,13 @@ action.prototype.action = function (dont_do_juice_pull) {
 			return pregenerator.pregenerate()
 		})
 		.then(() => {
-			return new Promise(function (resolve, reject) {
-				return gulp_tasks.start('preproduction', () => {
-					resolve()
-				})
-			})
+			return gulp_tasks.preproduction()
 		})
 		.then(() => {
 			return enduro_render.render()
 		})
 		.then(() => {
-			return new Promise(function (resolve, reject) {
-				return gulp_tasks.start('production', () => {
-					resolve()
-				})
-			})
+			return gulp_tasks.production()
 		})
 		.then(() => {
 			return event_hooks.execute_hook('post_update')

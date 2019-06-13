@@ -19,43 +19,29 @@ const logger = require(enduro.enduro_path + '/libs/logger')
 const static_locations_to_watch = ['assets/img', 'assets/vendor', 'assets/fonts', 'assets/admin_extensions', 'remote']
 
 // * ———————————————————————————————————————————————————————— * //
-// * 	init
-// *
-// * 	registeres copying task
-// *	@param {object} gulp - gulp to register the task into
-// *	@return {string} - name of the gulp task
+// *	todo
 // * ———————————————————————————————————————————————————————— * //
-assets_copier.prototype.init = function (gulp, browser_sync) {
+assets_copier.prototype.do = function () {
 	const self = this
 
-	// stores task name
-	const assets_copier_name = 'assets_copier'
+	// check if remote should be watched
+	if (enduro.flags.noremotewatch) {
+		_.pull(static_locations_to_watch, 'remote')
+	}
 
-	// registeres task to provided gulp
-	gulp.task(assets_copier_name, function () {
+	// will store promises
+	const copy_actions = []
 
-		// check if remote should be watched
-		if (enduro.flags.noremotewatch) {
-			_.pull(static_locations_to_watch, 'remote')
-		}
+	self.get_copy_from_and_copy_to_pairs()
+		.map((pair) => {
+			copy_actions.push(copy_if_exist(pair.copy_from, pair.copy_to))
+		})
 
-		// will store promises
-		const copy_actions = []
+	// also copy /assets/root into the generated root folder
+	copy_actions.push(self.copy_to_root_folder())
 
-		self.get_copy_from_and_copy_to_pairs()
-			.map((pair) => {
-				copy_actions.push(copy_if_exist(pair.copy_from, pair.copy_to))
-			})
-
-		// also copy /assets/root into the generated root folder
-		copy_actions.push(self.copy_to_root_folder())
-
-		// execute callback when all promises are resolved
-		return Promise.all(copy_actions)
-
-	})
-
-	return assets_copier_name
+	// execute callback when all promises are resolved
+	return Promise.all(copy_actions)
 }
 
 // * ———————————————————————————————————————————————————————— * //
@@ -66,20 +52,14 @@ assets_copier.prototype.init = function (gulp, browser_sync) {
 // *	@param {object} browser_sync - browser_sync object to refresh the browser on file update
 // *	@return {string} - name of the gulp task
 // * ———————————————————————————————————————————————————————— * //
-assets_copier.prototype.watch = function (gulp, browser_sync) {
+assets_copier.prototype.watch = function (browser_sync) {
 	const self = this
 
-	const assets_copier_watch_name = 'assets_copier_watch'
-
-	// registers task to provided gulp
-	gulp.task(assets_copier_watch_name, function () {
-		self.get_copy_from_and_copy_to_pairs()
-			.map((pair) => {
-				watch_for_static_change(pair.copy_from, pair.copy_to, browser_sync)
-			})
-		return Promise.resolve()
-	})
-	return assets_copier_watch_name
+	self.get_copy_from_and_copy_to_pairs()
+		.map((pair) => {
+			watch_for_static_change(pair.copy_from, pair.copy_to, browser_sync)
+		})
+	return Promise.resolve()
 }
 
 // * ———————————————————————————————————————————————————————— * //

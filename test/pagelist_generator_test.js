@@ -1,5 +1,4 @@
 const expect = require('chai').expect
-const gulp = require('gulp')
 
 const local_enduro = require('../index').quick_init()
 const pagelist_generator = require(enduro.enduro_path + '/libs/build_tools/pagelist_generator')
@@ -21,11 +20,6 @@ describe('Page list generation', function () {
 				expect(cmslist['flat']).to.have.lengthOf.at.least(3)
 				done()
 			})
-	})
-
-	it('should register gulp task', function () {
-		const gulp_task_name = pagelist_generator.init(gulp)
-		expect(gulp.tasks[gulp_task_name]).to.not.be.undefined
 	})
 
 	it('should save the cmslist', function () {

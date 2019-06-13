@@ -13,6 +13,7 @@ describe('admin api', function () {
 	let sid
 
 	before(function () {
+		this.timeout(15000)
 		return test_utilities.before(local_enduro, 'admin_api')
 			.then(() => {
 				return enduro.actions.start()
