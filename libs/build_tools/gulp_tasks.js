@@ -9,8 +9,6 @@ const gulp = require('gulp')
 const watch = require('gulp-watch')
 const browser_sync = require('browser-sync').create()
 const fs = require('fs')
-const iconfont = require('gulp-iconfont')
-const iconfontCss = require('gulp-iconfont-css')
 const handlebars = require('gulp-handlebars')
 const defineModule = require('gulp-define-module')
 const flatten = require('gulp-flatten')
@@ -113,7 +111,6 @@ function browsersync_start (norefresh) {
 		watch(
 			[
 				enduro.project_path + '/assets/css/**/*',
-				enduro.project_path + '/assets/fonticons/*',
 			],
 			() => {
 				gulp.start(css_handler, () => {
@@ -123,12 +120,6 @@ function browsersync_start (norefresh) {
 
 		// Watch for local handlebars helpers
 		watch([enduro.project_path + '/assets/hbs_helpers/**/*'], () => { gulp.start('hbs_helpers') })
-
-		// Watch for font icon
-		watch([enduro.project_path + '/assets/fonticons/*.svg'], () => {
-			gulp.start('iconfont')
-			gulp.enduro_refresh()
-		})
 
 		// Watch for hbs templates
 		watch([enduro.project_path + '/components/**/*.hbs'], () => { gulp.start('hbs_templates') })
@@ -154,40 +145,6 @@ function browsersync_start (norefresh) {
 		}
 	}
 }
-
-// * ———————————————————————————————————————————————————————— * //
-// * 	iconfont
-// * ———————————————————————————————————————————————————————— * //
-gulp.task('iconfont', function (cb) {
-	return gulp.src([enduro.project_path + '/assets/fonticons/*.svg'])
-		.pipe(iconfontCss({
-			fontName: enduro.config.project_slug + '_icons',
-			path: path.join(enduro.project_path, '/assets/fonticons/icons_template.scss'),
-			targetPath: path.join(enduro.project_path, enduro.config.build_folder, '/_prebuilt/icons.scss'),
-			fontPath: '/assets/iconfont/',
-		}))
-		.pipe(iconfont({
-			fontName: enduro.config.project_slug + '_icons',
-			prependUnicode: true,
-			fontHeight: 1024,
-			normalize: true,
-			formats: ['ttf', 'eot', 'woff'],
-			log: () => {},
-		}))
-		.on('glyphs', function (glyphs, options) {
-			glyphs = glyphs.map(function (glyph) {
-				glyph.unicode = glyph.unicode[0].charCodeAt(0).toString(16)
-				return glyph
-			})
-			const icon_json_file_path = path.join(enduro.project_path, enduro.config.build_folder, '/_prebuilt/icons.json')
-			flat_helpers.ensure_directory_existence(icon_json_file_path)
-				.then(() => {
-					fs.writeFileSync(icon_json_file_path, JSON.stringify(glyphs))
-					cb()
-				})
-		})
-		.pipe(gulp.dest(path.join(enduro.project_path, enduro.config.build_folder, '/assets/iconfont/')))
-})
 
 // * ———————————————————————————————————————————————————————— * //
 // * 	JS Handlebars - Not enduro, page-generation related
@@ -220,7 +177,7 @@ gulp.task('hbs_helpers', function () {
 // * 	Preproduction Task
 // *	Tasks that need to be done before doing the enduro render
 // * ———————————————————————————————————————————————————————— * //
-gulp.task('preproduction', ['iconfont', pagelist_generator])
+gulp.task('preproduction', [pagelist_generator])
 
 // * ———————————————————————————————————————————————————————— * //
 // * 	Production Task
