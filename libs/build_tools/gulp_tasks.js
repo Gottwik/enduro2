@@ -30,7 +30,6 @@ const assets_copier = require(enduro.enduro_path + '/libs/build_tools/assets_cop
 const assets_copier_watch = require(enduro.enduro_path + '/libs/build_tools/assets_copier').watch(gulp, browser_sync)
 const js_handler = require(enduro.enduro_path + '/libs/build_tools/js_handler').init(gulp, browser_sync)
 const css_handler = require(enduro.enduro_path + '/libs/build_tools/css_handler').init(gulp, browser_sync)
-const sprite_icons = require(enduro.enduro_path + '/libs/build_tools/sprite_icons').init(gulp, browser_sync)
 
 gulp.enduro_refresh = function (callback) {
 	logger.log('Refresh', true, 'enduro_render_events')
@@ -115,7 +114,6 @@ function browsersync_start (norefresh) {
 			[
 				enduro.project_path + '/assets/css/**/*',
 				enduro.project_path + '/assets/fonticons/*',
-				'!' + enduro.project_path + '/assets/css/sprites/*'
 			],
 			() => {
 				gulp.start(css_handler, () => {
@@ -125,9 +123,6 @@ function browsersync_start (norefresh) {
 
 		// Watch for local handlebars helpers
 		watch([enduro.project_path + '/assets/hbs_helpers/**/*'], () => { gulp.start('hbs_helpers') })
-
-		// Watch for png icons
-		watch([enduro.project_path + '/assets/spriteicons/*.png'], () => { gulp.start(css_handler) })
 
 		// Watch for font icon
 		watch([enduro.project_path + '/assets/fonticons/*.svg'], () => {
@@ -225,7 +220,7 @@ gulp.task('hbs_helpers', function () {
 // * 	Preproduction Task
 // *	Tasks that need to be done before doing the enduro render
 // * ———————————————————————————————————————————————————————— * //
-gulp.task('preproduction', ['iconfont', 'png_sprites', pagelist_generator])
+gulp.task('preproduction', ['iconfont', pagelist_generator])
 
 // * ———————————————————————————————————————————————————————— * //
 // * 	Production Task
