@@ -38,11 +38,13 @@ gulp_tasks.prototype.enduro_refresh = function (callback) {
 // * 	browser sync task
 // * ———————————————————————————————————————————————————————— * //
 gulp_tasks.prototype.browser_sync = function () {
-	return browsersync_start(false)
+	const self = this
+	return self.browsersync_start(false)
 }
 
 gulp_tasks.prototype.browser_sync_norefresh = function () {
-	return browsersync_start(true)
+	const self = this
+	return self.browsersync_start(true)
 }
 
 gulp_tasks.prototype.browser_sync_stop = function () {
@@ -50,7 +52,8 @@ gulp_tasks.prototype.browser_sync_stop = function () {
 	return new Promise.resolve()
 }
 
-function browsersync_start (norefresh) {
+gulp_tasks.prototype.browsersync_start  = function (norefresh) {
+	const self = this
 	logger.timestamp('browsersync started', 'enduro_events')
 	browser_sync.init({
 		server: {
@@ -123,10 +126,14 @@ function browsersync_start (norefresh) {
 			})
 
 		// Watch for local handlebars helpers
-		watch([enduro.project_path + '/assets/hbs_helpers/**/*'], () => { gulp.start('hbs_helpers') })
+		watch([enduro.project_path + '/assets/hbs_helpers/**/*'], () => {
+			self.hbs_helpers()
+		})
 
 		// Watch for hbs templates
-		watch([enduro.project_path + '/components/**/*.hbs'], () => { gulp.start('hbs_templates') })
+		watch([enduro.project_path + '/components/**/*.hbs'], () => {
+			self.hbs_templates()
+		})
 
 		// Watch for enduro changes
 		if (!enduro.flags.nocontentwatch) {
