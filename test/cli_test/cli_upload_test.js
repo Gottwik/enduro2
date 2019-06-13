@@ -1,3 +1,9 @@
+/** ———————————————————————————————————————————————————————— */
+/**    run this by:
+/**			mocha --recursive --bail --grep "cli upload"
+/**			mocha --recursive --bail --grep "cli upload with local filesystem"
+/** ———————————————————————————————————————————————————————— */
+
 // * vendor dependencies
 const expect = require('chai').expect
 
@@ -52,7 +58,7 @@ describe('[online_test] cli upload', function () {
 	})
 })
 
-describe('cli upload with local filesystem', function () {
+describe('[online_test] cli upload with local filesystem', function () {
 	this.timeout(15000)
 
 	before(function () {

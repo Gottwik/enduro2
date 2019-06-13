@@ -28,16 +28,16 @@
   },
   "dependencies": {
     "async": "^2.6.0",
-    "bluebird": "^3.5.1",
+    "bluebird": "^3.5.5",
     "browser-sync": "^2.26.7",
-    "chalk": "^2.3.0",
-    "connect-multiparty": "^2.1.0",
-    "cookie-parser": "^1.4.3",
-    "cors": "^2.8.4",
-    "dir-compare": "^1.0.1",
+    "chalk": "^2.4.2",
+    "connect-multiparty": "^2.2.0",
+    "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
+    "dir-compare": "^1.7.2",
     "enduro_admin": "^1.0.73",
-    "express": "^4.16.2",
-    "express-session": "^1.15.6",
+    "express": "^4.17.1",
+    "express-session": "^1.16.2",
     "extend": "^3.0.0",
     "fs-extra": "^5.0.0",
     "glob": "^7.0.3",
@@ -116,7 +116,7 @@
     "url": "git+https://github.com/Gottwik/enduro.git"
   },
   "scripts": {
-    "test": "mocha --recursive --bail",
-    "to": "mocha --recursive --bail --grep online_test -i"
+    "test": "mocha --recursive --bail --grep online_test -i",
+    "to": "mocha --recursive --bail"
   }
 }
