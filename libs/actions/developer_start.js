@@ -14,6 +14,7 @@ const log_clusters = require(enduro.enduro_path + '/libs/log_clusters/log_cluste
 const enduro_server = require(enduro.enduro_path + '/libs/enduro_server/enduro_server')
 const gulp_tasks = require(enduro.enduro_path + '/libs/build_tools/gulp_tasks')
 const logger = require(enduro.enduro_path + '/libs/logger')
+const website_app = require(enduro.enduro_path + '/libs/website_app')
 
 action.prototype.action = function (config) {
 
@@ -43,6 +44,7 @@ action.prototype.action = function (config) {
 
 						if (!enduro.flags.noproduction) {
 							// start production server in development mode
+							website_app.watch_for_updates(enduro_server)
 							enduro_server.run({ development_mode: true })
 						}
 

@@ -10,7 +10,6 @@ const enduro_server = function () {}
 
 // * vendor dependencies
 const express = require('express')
-const app = express()
 const session = require('express-session')
 const cors = require('cors')
 const multiparty_middleware = require('connect-multiparty')()
@@ -23,25 +22,6 @@ const trollhunter = require(enduro.enduro_path + '/libs/trollhunter')
 const logger = require(enduro.enduro_path + '/libs/logger')
 const brick_handler = require(enduro.enduro_path + '/libs/bricks/brick_handler')
 
-// initialization of the sessions
-app.set('trust proxy', 1)
-app.use(session({
-	secret: 'keyboard cat',
-	resave: false,
-	saveUninitialized: true,
-	cookie: {},
-}))
-
-app.use(cookieParser())
-
-app.use(cors())
-
-// add enduro.js header
-app.use(function (req, res, next) {
-	res.header('X-Powered-By', 'enduro.js')
-	next()
-})
-
 // * ———————————————————————————————————————————————————————— * //
 // * 	server run
 // *
@@ -52,6 +32,27 @@ app.use(function (req, res, next) {
 enduro_server.prototype.run = function (server_setup) {
 	// stores current enduro_server instance
 	const self = this
+
+	const app = express()
+
+	// initialization of the sessions
+	app.set('trust proxy', 1)
+	app.use(session({
+		secret: 'keyboard cat',
+		resave: false,
+		saveUninitialized: true,
+		cookie: {},
+	}))
+
+	app.use(cookieParser())
+
+	app.use(cors())
+
+	// add enduro.js header
+	app.use(function (req, res, next) {
+		res.header('X-Powered-By', 'enduro.js')
+		next()
+	})
 
 	server_setup = server_setup || {}
 
@@ -147,6 +148,7 @@ enduro_server.prototype.run = function (server_setup) {
 enduro_server.prototype.stop = function () {
 	return new Promise(function (resolve, reject) {
 		enduro.server.close(() => {
+			delete enduro.server
 			resolve()
 		})
 	})
