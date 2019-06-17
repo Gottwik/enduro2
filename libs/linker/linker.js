@@ -53,6 +53,9 @@ enduro_linker.prototype.init_enduro_linked_configuration = function (project_pat
 	// initialize brick_processors
 	linker.brick_processors = []
 
+	// add events to global context
+	linker.events = require(enduro_path + '/libs/events/events')
+
 	return linker
 }
 

@@ -12,6 +12,9 @@ action.prototype.action = function () {
 		.then(() => {
 			return enduro_server.stop()
 		})
+		.then(() => {
+			enduro.events.this_happened('server_shutdown')
+		})
 }
 
 module.exports = new action()

@@ -41,7 +41,7 @@ website_app.prototype.forward = function (app, server) {
 // * ———————————————————————————————————————————————————————— * //
 website_app.prototype.watch_for_updates = function (enduro_server) {
 	let restarting = false
-	watch([enduro.project_path + '/app/**/*'], () => {
+	const watcher_for_app_files = watch([enduro.project_path + '/app/**/*'], () => {
 
 		if (restarting) {
 			logger.timestamp('server already restarting', 'enduro_events')
@@ -63,6 +63,11 @@ website_app.prototype.watch_for_updates = function (enduro_server) {
 				logger.timestamp('server restarted', 'enduro_events')
 				restarting = false
 			})
+	})
+
+	// stop watching for app files when server gets shut down
+	enduro.events.do_on_event('server_shutdown', () => {
+		watcher_for_app_files.close()
 	})
 }
 

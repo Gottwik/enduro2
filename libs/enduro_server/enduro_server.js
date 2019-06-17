@@ -147,6 +147,12 @@ enduro_server.prototype.run = function (server_setup) {
 
 enduro_server.prototype.stop = function () {
 	return new Promise(function (resolve, reject) {
+
+		if (!enduro.server) {
+			resolve()
+			return
+		}
+
 		enduro.server.close(() => {
 			delete enduro.server
 			resolve()

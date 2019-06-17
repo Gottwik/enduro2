@@ -48,7 +48,7 @@
     "gulp-define-module": "^0.1.5",
     "gulp-filter-by": "^1.2.0",
     "gulp-flatten": "^0.4.0",
-    "gulp-handlebars": "^4.0.0",
+    "gulp-handlebars": "^5.0.2",
     "gulp-sass": "^3.1.2",
     "gulp-sass-bulk-import-gottwik": "^1.0.1",
     "gulp-sourcemaps": "^2.6.3",
