@@ -16,7 +16,7 @@ const gulp = require('gulp')
 // * enduro dependencies
 const logger = require(enduro.enduro_path + '/libs/logger')
 
-sass_handler.prototype.do = function (browser_sync) {
+sass_handler.prototype.do = function () {
 
 	logger.timestamp('Sass compiling started', 'enduro_events')
 
@@ -36,7 +36,6 @@ sass_handler.prototype.do = function (browser_sync) {
 		}))
 		.pipe(sourcemaps.write())
 		.pipe(gulp.dest(enduro.project_path + '/' + enduro.config.build_folder + '/assets/css'))
-		.pipe(browser_sync.stream())
 		.on('end', () => {
 			logger.timestamp('Sass compiling finished', 'enduro_events')
 		})

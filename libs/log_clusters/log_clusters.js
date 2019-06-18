@@ -16,16 +16,14 @@ log_clusters.prototype.log = function (cluster, context) {
 
 clusters['developer_start'] = (context) => {
 	logger.init('Enduro started', 'nice_dev_init')
-	logger.log('Development server started at:', 'nice_dev_init')
-	logger.tablog('localhost:3000', 'nice_dev_init')
+	logger.log('Server started at:', 'nice_dev_init')
+	logger.tablog('localhost:5000', 'nice_dev_init')
 
 	if (!enduro.flags.noadmin) {
 		logger.log('Admin ui available at:', 'nice_dev_init')
 		logger.tablog('localhost:5000/admin', false, 'nice_dev_init')
 	}
 
-	logger.line('nice_dev_init')
-	logger.log('Admin has no live-reload!', false, 'nice_dev_init')
 	logger.end('nice_dev_init')
 }
 

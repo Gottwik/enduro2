@@ -8,10 +8,7 @@ const enduro_server = require(enduro.enduro_path + '/libs/enduro_server/enduro_s
 const task_runner = require(enduro.enduro_path + '/libs/build_tools/task_runner')
 
 action.prototype.action = function () {
-	return task_runner.browser_sync_stop()
-		.then(() => {
-			return enduro_server.stop()
-		})
+	return enduro_server.stop()
 		.then(() => {
 			enduro.events.this_happened('server_shutdown')
 		})

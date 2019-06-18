@@ -19,16 +19,6 @@ describe('Development server', function () {
 			.delay(500)
 	})
 
-	it('should serve something on port 3000', function (done) {
-		request('http://localhost:3000/', function (error, response, body) {
-			if (error) { console.log(error) }
-			expect(body).to.contain('body')
-			expect(body).to.contain('head')
-			expect(body).to.contain('title')
-			done()
-		})
-	})
-
 	it('should serve something on port 5000', function (done) {
 		request('http://localhost:5000/', function (error, response, body) {
 			if (error) { console.log(error) }

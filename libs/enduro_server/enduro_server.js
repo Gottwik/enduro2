@@ -29,7 +29,7 @@ const brick_handler = require(enduro.enduro_path + '/libs/bricks/brick_handler')
 // *	@param {boolean} development_mode - if true, prevents enduro render on start to prevent double rendering
 // *	@return {}
 // * ———————————————————————————————————————————————————————— * //
-enduro_server.prototype.run = function (server_setup) {
+enduro_server.prototype.run = function () {
 	// stores current enduro_server instance
 	const self = this
 
@@ -54,8 +54,6 @@ enduro_server.prototype.run = function (server_setup) {
 		next()
 	})
 
-	server_setup = server_setup || {}
-
 	return new Promise(function (resolve, reject) {
 
 		// overrides the port by system environment variable
@@ -64,7 +62,7 @@ enduro_server.prototype.run = function (server_setup) {
 		// starts listening to request on specified port
 		enduro.server = app.listen(enduro.config.port, function () {
 			logger.timestamp('Production server started at port ' + enduro.config.port, 'enduro_events')
-			if (!server_setup.development_mode && !enduro.flags.nocompile) {
+			if (!enduro.flags.nocompile) {
 				enduro.actions.render()
 					.then(() => {
 						resolve()

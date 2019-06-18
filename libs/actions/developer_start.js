@@ -15,6 +15,7 @@ const enduro_server = require(enduro.enduro_path + '/libs/enduro_server/enduro_s
 const task_runner = require(enduro.enduro_path + '/libs/build_tools/task_runner')
 const logger = require(enduro.enduro_path + '/libs/logger')
 const website_app = require(enduro.enduro_path + '/libs/website_app')
+const change_watcher = require(enduro.enduro_path + '/libs/developer_velocity/change_watcher')
 
 action.prototype.action = function (config) {
 
@@ -29,27 +30,11 @@ action.prototype.action = function (config) {
 
 	logger.timestamp('developer start', 'enduro_events')
 
-	let prevent_double_callback = false
-
-	return enduro.actions.render()
+	return enduro_server.run()
 		.then(() => {
-			logger.timestamp('Render finished', 'enduro_events')
-
-			const task_to_run = enduro.flags.norefresh ? 'default_norefresh' : 'default'
-			return task_runner[task_to_run]()
-				.then(() => {
-					if (!enduro.flags.noadmin && !prevent_double_callback) {
-						prevent_double_callback = true
-						logger.timestamp('production server starting', 'enduro_events')
-
-						if (!enduro.flags.noproduction) {
-							// start production server in development mode
-							website_app.watch_for_updates(enduro_server)
-							enduro_server.run({ development_mode: true })
-						}
-
-					}
-				})
+			if (!enduro.flags.nowatch) {
+				return change_watcher.start_watching()
+			}
 		})
 }
 
