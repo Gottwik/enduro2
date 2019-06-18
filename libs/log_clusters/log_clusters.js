@@ -15,7 +15,9 @@ log_clusters.prototype.log = function (cluster, context) {
 }
 
 clusters['developer_start'] = (context) => {
-	logger.init('Enduro started', 'nice_dev_init')
+	const version = require(enduro.enduro_path + '/package.json').version
+
+	logger.init('Enduro[' + version + '] started', 'nice_dev_init')
 	logger.log('Server started at:', 'nice_dev_init')
 	logger.tablog('localhost:5000', 'nice_dev_init')
 

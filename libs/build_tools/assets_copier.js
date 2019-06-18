@@ -49,15 +49,14 @@ assets_copier.prototype.do = function () {
 // *
 // * 	starts to watch for changes in the assets folders
 // *	@param {object} gulp - gulp to register the task into
-// *	@param {object} browser_sync - browser_sync object to refresh the browser on file update
 // *	@return {string} - name of the gulp task
 // * ———————————————————————————————————————————————————————— * //
-assets_copier.prototype.watch = function (browser_sync) {
+assets_copier.prototype.watch = function () {
 	const self = this
 
 	self.get_copy_from_and_copy_to_pairs()
 		.map((pair) => {
-			watch_for_static_change(pair.copy_from, pair.copy_to, browser_sync)
+			watch_for_static_change(pair.copy_from, pair.copy_to)
 		})
 	return Promise.resolve()
 }
@@ -109,14 +108,12 @@ function copy_if_exist (copy_from, copy_to) {
 }
 
 // watches for changes
-function watch_for_static_change (copy_from, copy_to, browser_sync) {
+function watch_for_static_change (copy_from, copy_to) {
 	if (!enduro.flags.nowatch) {
 		watch([copy_from + '/**/*'], () => {
 			if (!enduro.flags.temporary_nostaticwatch) {
 				fs.copyAsync(copy_from, copy_to, { overwrite: true })
-					.then(() => {
-						browser_sync.reload()
-					}, (err) => {
+					.then(() => {}, (err) => {
 						console.log('something went wrong with copying files', copy_from, copy_to)
 						logger.err(err)
 					})

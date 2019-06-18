@@ -48,7 +48,7 @@ task_runner.prototype.preproduction = function () {
 
 // * ———————————————————————————————————————————————————————— * //
 // * 	Production Task
-// *	No browser_sync, no watching for anything
+// *	no watching for anything
 // * ———————————————————————————————————————————————————————— * //
 task_runner.prototype.production = function () {
 	const self = this
@@ -65,7 +65,7 @@ task_runner.prototype.default = function () {
 
 task_runner.prototype.default_norefresh = function () {
 	const self = this
-	return Promise.all([assets_copier.watch(), self.browser_sync_norefresh()])
+	return Promise.all([assets_copier.watch()])
 }
 
 // Export gulp to enable access for enduro
