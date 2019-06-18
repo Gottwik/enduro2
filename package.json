@@ -86,11 +86,6 @@
     "rewire": "^3.0.2"
   },
   "directories": {},
-  "dist": {
-    "integrity": "sha512-ml+lOJwPaG4beUL31/V5A9F12tW6kVtsUg3LzF2DgU9P9NTkLoEz52n+FrWhYB/vRbyXQ0puWet04PVK6+xGSw==",
-    "shasum": "4ceaaf61faa0bb11163f545f98bfb0efa36297e2",
-    "tarball": "https://registry.npmjs.org/enduro/-/enduro-1.4.38.tgz"
-  },
   "engines": {
     "node": ">= 6"
   },
