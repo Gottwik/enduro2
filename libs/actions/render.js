@@ -12,7 +12,7 @@ const global_data = require(enduro.enduro_path + '/libs/global_data')
 const helper_handler = require(enduro.enduro_path + '/libs/helper_handler')
 const components_handler = require(enduro.enduro_path + '/libs/components_handler')
 const enduro_render = require(enduro.enduro_path + '/libs/enduro_render')
-const gulp_tasks = require(enduro.enduro_path + '/libs/build_tools/gulp_tasks')
+const task_runner = require(enduro.enduro_path + '/libs/build_tools/task_runner')
 const pregenerator = require(enduro.enduro_path + '/libs/pregenerator/pregenerator')
 const abstractor = require(enduro.enduro_path + '/libs/abstractor/abstractor')
 const markdownifier = require(enduro.enduro_path + '/libs/markdown/markdownifier')
@@ -52,13 +52,13 @@ action.prototype.action = function (dont_do_juice_pull) {
 			return pregenerator.pregenerate()
 		})
 		.then(() => {
-			return gulp_tasks.preproduction()
+			return task_runner.preproduction()
 		})
 		.then(() => {
 			return enduro_render.render()
 		})
 		.then(() => {
-			return gulp_tasks.production()
+			return task_runner.production()
 		})
 		.then(() => {
 			return event_hooks.execute_hook('post_update')

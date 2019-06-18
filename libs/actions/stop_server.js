@@ -5,10 +5,10 @@
 const action = function () {}
 
 const enduro_server = require(enduro.enduro_path + '/libs/enduro_server/enduro_server')
-const gulp_tasks = require(enduro.enduro_path + '/libs/build_tools/gulp_tasks')
+const task_runner = require(enduro.enduro_path + '/libs/build_tools/task_runner')
 
 action.prototype.action = function () {
-	return gulp_tasks.browser_sync_stop()
+	return task_runner.browser_sync_stop()
 		.then(() => {
 			return enduro_server.stop()
 		})

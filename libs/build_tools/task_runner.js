@@ -27,9 +27,9 @@ const assets_copier = require(enduro.enduro_path + '/libs/build_tools/assets_cop
 const js_handler = require(enduro.enduro_path + '/libs/build_tools/js_handler')
 const css_handler = require(enduro.enduro_path + '/libs/build_tools/css_handler')
 
-const gulp_tasks = function () {}
+const task_runner = function () {}
 
-gulp_tasks.prototype.enduro_refresh = function (callback) {
+task_runner.prototype.enduro_refresh = function (callback) {
 	logger.log('Refresh', true, 'enduro_render_events')
 	return enduro.actions.render(true)
 }
@@ -37,22 +37,22 @@ gulp_tasks.prototype.enduro_refresh = function (callback) {
 // * ———————————————————————————————————————————————————————— * //
 // * 	browser sync task
 // * ———————————————————————————————————————————————————————— * //
-gulp_tasks.prototype.browser_sync = function () {
+task_runner.prototype.browser_sync = function () {
 	const self = this
 	return self.browsersync_start(false)
 }
 
-gulp_tasks.prototype.browser_sync_norefresh = function () {
+task_runner.prototype.browser_sync_norefresh = function () {
 	const self = this
 	return self.browsersync_start(true)
 }
 
-gulp_tasks.prototype.browser_sync_stop = function () {
+task_runner.prototype.browser_sync_stop = function () {
 	browser_sync.exit()
 	return new Promise.resolve()
 }
 
-gulp_tasks.prototype.browsersync_start  = function (norefresh) {
+task_runner.prototype.browsersync_start  = function (norefresh) {
 	const self = this
 	logger.timestamp('browsersync started', 'enduro_events')
 	browser_sync.init({
@@ -160,7 +160,7 @@ gulp_tasks.prototype.browsersync_start  = function (norefresh) {
 // * ———————————————————————————————————————————————————————— * //
 // * 	JS Handlebars - Not enduro, page-generation related
 // * ———————————————————————————————————————————————————————— * //
-gulp_tasks.prototype.hbs_templates = function () {
+task_runner.prototype.hbs_templates = function () {
 	return gulp.src(enduro.project_path + '/components/**/*.hbs')
 		.pipe(handlebars({
 			// Pass local handlebars
@@ -174,7 +174,7 @@ gulp_tasks.prototype.hbs_templates = function () {
 // * ———————————————————————————————————————————————————————— * //
 // * 	Handlebars helpers
 // * ———————————————————————————————————————————————————————— * //
-gulp_tasks.prototype.hbs_helpers = function () {
+task_runner.prototype.hbs_helpers = function () {
 	return gulp.src([enduro.project_path + '/assets/hbs_helpers/**/*.js', enduro.enduro_path + '/hbs_helpers/**/*.js'])
 		.pipe(filterBy(function (file) {
 			return file.contents.toString().indexOf('enduro_nojs') == -1
@@ -188,7 +188,7 @@ gulp_tasks.prototype.hbs_helpers = function () {
 // * 	Preproduction Task
 // *	Tasks that need to be done before doing the enduro render
 // * ———————————————————————————————————————————————————————— * //
-gulp_tasks.prototype.preproduction = function () {
+task_runner.prototype.preproduction = function () {
 	return pagelist_generator.do()
 }
 
@@ -196,7 +196,7 @@ gulp_tasks.prototype.preproduction = function () {
 // * 	Production Task
 // *	No browser_sync, no watching for anything
 // * ———————————————————————————————————————————————————————— * //
-gulp_tasks.prototype.production = function () {
+task_runner.prototype.production = function () {
 	const self = this
 	return Promise.all([js_handler.do(), css_handler.do(browser_sync), self.hbs_templates(), assets_copier.do(), self.hbs_helpers()])
 }
@@ -204,15 +204,15 @@ gulp_tasks.prototype.production = function () {
 // * ———————————————————————————————————————————————————————— * //
 // * 	Default Task
 // * ———————————————————————————————————————————————————————— * //
-gulp_tasks.prototype.default = function () {
+task_runner.prototype.default = function () {
 	const self = this
 	return Promise.all([assets_copier.watch(browser_sync), self.browser_sync()])
 }
 
-gulp_tasks.prototype.default_norefresh = function () {
+task_runner.prototype.default_norefresh = function () {
 	const self = this
 	return Promise.all([assets_copier.watch(browser_sync), self.browser_sync_norefresh()])
 }
 
 // Export gulp to enable access for enduro
-module.exports = new gulp_tasks()
+module.exports = new task_runner()
