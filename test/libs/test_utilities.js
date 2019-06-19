@@ -40,13 +40,16 @@ test_utilities.prototype.after = function () {
 	const self = this
 
 	// this will delete testfolder and set the path back to project's root for the other tests
-	return Promise.race([
-			self.delete_testfolder()
-				.then(() => {
-					enduro.project_path = process.cwd()
-				}),
-			new Promise.delay(1500)
-		])
+	return enduro.events.this_happened('enduro_shutting_down')
+		.then(() => {
+			return Promise.race([
+					self.delete_testfolder()
+						.then(() => {
+							enduro.project_path = process.cwd()
+						}),
+					new Promise.delay(1500)
+				])
+		})
 }
 
 test_utilities.prototype.request_file = function (url) {

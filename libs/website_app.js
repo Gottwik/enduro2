@@ -8,7 +8,6 @@ const website_app = function () {}
 // * enduro dependencies
 const flat_helpers = require(enduro.enduro_path + '/libs/flat_db/flat_helpers')
 const watch = require('gulp-watch')
-const logger = require(enduro.enduro_path + '/libs/logger')
 
 // constants
 const LOCAL_APP_FILE = enduro.project_path + '/app/app.js'
@@ -31,44 +30,6 @@ website_app.prototype.forward = function (app, server) {
 			console.log(e)
 		}
 	}
-}
-
-// * ———————————————————————————————————————————————————————— * //
-// * 	watch for updates and re-require them
-// *
-// *	@param {express application} app - root express app
-// *	@return {null}
-// * ———————————————————————————————————————————————————————— * //
-website_app.prototype.watch_for_updates = function (enduro_server) {
-	let restarting = false
-	const watcher_for_app_files = watch([enduro.project_path + '/app/**/*'], () => {
-
-		if (restarting) {
-			logger.timestamp('server already restarting', 'enduro_events')
-		}
-
-		logger.timestamp('app change detected', 'enduro_events')
-		restarting = true
-		Object.keys(require.cache).map((path) => {
-			if (path.match(enduro.project_path + '/app/')) {
-				delete require.cache[path]
-			}
-		})
-		enduro_server.stop()
-			.then(() => {
-				logger.timestamp('server stopped', 'enduro_events')
-				enduro_server.run()
-			})
-			.then(() => {
-				logger.timestamp('server restarted', 'enduro_events')
-				restarting = false
-			})
-	})
-
-	// stop watching for app files when server gets shut down
-	enduro.events.do_on_event('server_shutdown', () => {
-		watcher_for_app_files.close()
-	})
 }
 
 module.exports = new website_app()

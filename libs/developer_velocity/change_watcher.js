@@ -23,7 +23,7 @@ change_watcher.prototype.start_watching = function () {
     })
 
     // stop watching when server gets shut down
-	enduro.events.do_on_event('server_shutdown', () => {
+	enduro.events.do_on_event('enduro_shutting_down', () => {
 		self.all_watchers.map((watcher) => {
 			watcher.close()
 		})
