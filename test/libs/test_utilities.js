@@ -50,6 +50,10 @@ test_utilities.prototype.after = function () {
 					new Promise.delay(1500)
 				])
 		})
+		.then(() => {
+			// just heuristic, we add some delay after each test is finished so the system has time to recover a little
+			return new Promise.delay(200)
+		})
 }
 
 test_utilities.prototype.request_file = function (url) {

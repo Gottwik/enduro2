@@ -34,7 +34,6 @@
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
     "dir-compare": "^1.7.2",
-    "enduro_admin": "^1.0.73",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
     "extend": "^3.0.0",
