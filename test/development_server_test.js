@@ -29,16 +29,6 @@ describe('Development server', function () {
 		})
 	})
 
-	it('should serve admin interface', function (done) {
-		request('http://localhost:5000/admin', function (error, response, body) {
-			if (error) { console.log(error) }
-			expect(body).to.contain('body')
-			expect(body).to.contain('head')
-			expect(body).to.contain('ng-view ng-cloak')
-			done()
-		})
-	})
-
 	after(function () {
 		return enduro.actions.stop_server()
 			.then(() => {

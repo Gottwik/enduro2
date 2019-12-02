@@ -137,10 +137,6 @@ enduro_server.prototype.run = function () {
 					})
 			}
 		})
-
-		// init socket and store everybody in global enduro.sockets
-		const io = require('socket.io')(enduro.server)
-		enduro.sockets = io.sockets
 	})
 }
 
