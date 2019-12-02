@@ -5,7 +5,6 @@
 const action = function () {}
 
 // * vendor dependencies
-const npm = require('npm')
 const path = require('path')
 const Promise = require('bluebird')
 
@@ -27,6 +26,7 @@ action.prototype.action = function (brick_name) {
 }
 
 function install_brick_via_npm (brick_name) {
+	const npm = require('npm')
 	return new Promise(function (resolve, reject) {
 		// workaround to make npm silent
 		const log_temp = console.log

@@ -6,20 +6,6 @@
   "author": {
     "name": "Martin Gottweis"
   },
-  "contributors": [
-    {
-      "name": "Cosmo Myzrail Gorynych"
-    },
-    {
-      "name": "Justin Rahardjo"
-    },
-    {
-      "name": "Sebastian Lietzijewitsch"
-    },
-    {
-      "name": "Sergejs Bojaruns"
-    }
-  ],
   "bin": {
     "enduro": "./cli.js"
   },
