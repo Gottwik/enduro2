@@ -21,8 +21,15 @@ app_watcher.prototype.start_watching = function () {
 		})
 }
 
+let already_restarting = false
 app_watcher.prototype.register_what_to_do_on_change = function () {
 	enduro.events.do_on_event('app_files_changed', function () {
+
+		if (already_restarting) {
+			logger.timestamp('server already_restarting', 'enduro_events')
+			return 1;
+		}
+		already_restarting = true
 
 		// remove all app files from cache - you know otherwise the change will not be executed
 		Object.keys(require.cache).map((path) => {
@@ -37,6 +44,7 @@ app_watcher.prototype.register_what_to_do_on_change = function () {
 			})
 			.then(() => {
 				logger.timestamp('server restarted', 'enduro_events')
+				already_restarting = false
 			})
 	})
 }
